@@ -2,7 +2,9 @@
 {
     public class SearchMessageDto
     {
-        public DateTime ReceivedDate { get; set; }
+        public string? Channel { get; set; }
+
+        public DateTime? ReceivedDate { get; set; }
 
         public string? ReceivedFrom { get; set; }
 

@@ -15,6 +15,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th class="text-nowrap">Channel</th>
                 <th class="text-nowrap">Received date</th>
                 <th class="text-nowrap">Recieved from</th>
                 <th>Subject</th>
@@ -25,7 +26,8 @@
             @foreach (var result in searchMessage)
             {
                 <tr>
-                    <td>@result.ReceivedDate.ToShortDateString()</td>
+                    <td class="text-nowrap">@result.Channel</td>
+                    <td class="text-nowrap">@result.ReceivedDate?.ToShortDateString()</td>
                     <td>@result.ReceivedFrom</td>
                     <td>@result.Subject</td>
                     <td>@result.Summary</td>
