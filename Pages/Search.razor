@@ -1,0 +1,46 @@
+﻿@page "/search"
+
+@using Microsoft.Graph;
+@using SearchMessage.Data;
+
+@inject SearchMessageService Service;
+
+<PageTitle>Search message</PageTitle>
+
+<input class="oi-text" placeholder="search text" id="searchText" @bind="searchText" />
+<button class="btn btn-primary" @onclick="@(async() => await SearchText())">Search</button>
+
+@if (searchMessage != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-nowrap">Received date</th>
+                <th class="text-nowrap">Recieved from</th>
+                <th>Subject</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in searchMessage)
+            {
+                <tr>
+                    <td>@result.ReceivedDate.ToShortDateString()</td>
+                    <td>@result.ReceivedFrom</td>
+                    <td>@result.Subject</td>
+                    <td>@result.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<SearchMessageDto>? searchMessage = null;
+    private string searchText = string.Empty;
+
+    private async Task SearchText()
+    {
+        searchMessage = await Service.SearchMessagesAsync(searchText);
+    }
+}

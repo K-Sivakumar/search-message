@@ -1,0 +1,34 @@
+﻿@page "/"
+
+@using Microsoft.Graph;
+@using Microsoft.Identity.Web;
+
+@inject GraphServiceClient GraphServiceClient;
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler;
+
+<PageTitle>Index</PageTitle>
+
+@if (user is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p><h1>Hello, @user.DisplayName</h1> Welcome to hack together!!!</p>
+}
+
+@code {
+    User? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            user = await GraphServiceClient.Me.Request().GetAsync();
+        }
+        catch (Exception ex)
+        {
+            ConsentHandler.HandleException(ex);
+        }
+    }
+}
