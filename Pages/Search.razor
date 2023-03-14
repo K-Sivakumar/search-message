@@ -7,6 +7,7 @@
 
 <PageTitle>Search message</PageTitle>
 
+<h1>Search text both from Mail and Teams chat</h1>
 <input class="oi-text" placeholder="search text" id="searchText" @bind="searchText" />
 <button class="btn btn-primary" @onclick="@(async() => await SearchText())">Search</button>
 
@@ -28,7 +29,10 @@
                 <tr>
                     <td class="text-nowrap">@result.Channel</td>
                     <td class="text-nowrap">@result.ReceivedDate?.ToShortDateString()</td>
-                    <td>@result.ReceivedFrom</td>
+                    <td>
+                        <span class="text-nowrap">Name: @result.ReceivedFrom</span><br/>
+                        <span class="text-nowrap">Email: @result.ReceivedEmail</span>
+                    </td>
                     <td>@result.Subject</td>
                     <td>@result.Summary</td>
                 </tr>

@@ -8,6 +8,8 @@
 
         public string? ReceivedFrom { get; set; }
 
+        public string? ReceivedEmail { get; set; }
+
         public string Summary { get; set; }
 
         public string? Subject { get; set; }

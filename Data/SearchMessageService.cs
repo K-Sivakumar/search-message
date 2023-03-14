@@ -19,7 +19,6 @@
         {
             var requests = new List<Task<ISearchEntityQueryCollectionPage>>
             {
-                CreateSearchQueryObject(EntityType.Event, value),
                 CreateSearchQueryObject(EntityType.Message, value),
                 CreateSearchQueryObject(EntityType.ChatMessage, value),
             };
@@ -33,6 +32,7 @@
                 Rank = sr.Rank,
                 ReceivedDate = GetReceivedDate(sr.Resource),
                 ReceivedFrom = GetReceivedFrom(sr.Resource),
+                ReceivedEmail = GetReceivedEmail(sr.Resource),
                 Subject = GetSubject(sr.Resource),
                 Summary = sr.Summary
             });
@@ -63,7 +63,7 @@
                 return string.Empty;
             }
 
-            return resource is Message ? "Message" : resource is ChatMessage ? "Teams chat" : string.Empty;
+            return resource is Message ? "Mail" : resource is ChatMessage ? "Teams chat" : string.Empty;
         }
 
         private static DateTime? GetReceivedDate(Entity resource)
@@ -84,13 +84,54 @@
                 return null;
             }
 
-            return resource is Message message ? (message.From?.EmailAddress?.Address) :
-                resource is ChatMessage chatMessage && 
-                    chatMessage.From.AdditionalData["emailAddress"] is object chatDetails &&
-                    chatDetails != null ? DeserializeAnonymousType(chatDetails.ToString(), new { name = "", address = "" }).address : null;
+            return resource is Message message ? GetReceivedDetailFromMessage(message).name :
+                resource is ChatMessage chatMessage ? GetReceivedDetailFromChat(chatMessage).name : null;
         }
 
-        private static T DeserializeAnonymousType<T>(string json, T anonymousType) => JsonSerializer.Deserialize<T>(json);
+        private static string? GetReceivedEmail(Entity resource)
+        {
+            if (resource == null)
+            {
+                return null;
+            }
+
+            return resource is Message message ? GetReceivedDetailFromMessage(message).emailAddress :
+                resource is ChatMessage chatMessage ? GetReceivedDetailFromChat(chatMessage).emailAddress : null;
+        }
+
+        private static (string name, string emailAddress) GetReceivedDetailFromChat(ChatMessage chatMessage)
+        {
+            var chatDetails = chatMessage.From.AdditionalData["emailAddress"];
+            if (chatDetails == null)
+            {
+                return (string.Empty, string.Empty);
+            }
+
+            var chatFromDetail = DeserializeAnonymousType(chatDetails, new { name = "", address = "" });
+            if (chatFromDetail == null)
+            {
+                return (string.Empty, string.Empty);
+            }
+
+            return (chatFromDetail.name, chatFromDetail.address);
+        }
+
+        private static (string name, string emailAddress) GetReceivedDetailFromMessage(Message message)
+        {
+            return (message.From?.EmailAddress?.Name ?? string.Empty, message.From?.EmailAddress?.Address ?? string.Empty);
+        }
+
+        private static T? DeserializeAnonymousType<T>(object jsonObject, T anonymousType)
+            where T : class
+        {
+            if (anonymousType == null)
+            {
+                return null;
+            }
+
+            string jsonString = jsonObject.ToString() ?? string.Empty;
+            return JsonSerializer.Deserialize<T>(jsonString);
+        }
 
         private static string? GetSubject(Entity resource)
         {
