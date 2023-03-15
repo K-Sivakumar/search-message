@@ -47,3 +47,16 @@ dotnet run
 ```
 
 Open your browser to `https://localhost:5001`.
+
+#### Note
+
+As a sample, and for simplicity, this sample does not follow best practices for an application in Production. If you intent to ship this code, we recommend doing the following:
+
+-	Never check in app secrets to your repository
+-	Never use In-memory token cache
+
+-	**NuGet packages** used in the sample. These are handled using the package manager, as described in the setup instructions. These should update automatically at build time; if not, make sure your NuGet package manager is up-to-date. You can learn more about the packages we used at the links below.
+
+	-	[Microsoft.Identity.Web.MicrosoftGraphBeta](https://github.com/AzureAD/microsoft-identity-web) provides MS Graph API calls.
+	-	[Microsoft.Identity.Web](https://github.com/AzureAD/microsoft-identity-web) provides OAuth with OpenID authentication and authorization.
+	-	[Microsoft.Identity.Web.UI](https://github.com/AzureAD/microsoft-identity-web) provides authentication and authorization UI.
