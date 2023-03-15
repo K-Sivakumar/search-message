@@ -60,3 +60,6 @@ As a sample, and for simplicity, this sample does not follow best practices for 
 	-	[Microsoft.Identity.Web.MicrosoftGraphBeta](https://github.com/AzureAD/microsoft-identity-web) provides MS Graph API calls.
 	-	[Microsoft.Identity.Web](https://github.com/AzureAD/microsoft-identity-web) provides OAuth with OpenID authentication and authorization.
 	-	[Microsoft.Identity.Web.UI](https://github.com/AzureAD/microsoft-identity-web) provides authentication and authorization UI.
+-	**Screen print** Home and Search page
+	-	![Home page](./.images/home.png)
+	-	![Search page](./.images/search.png)
